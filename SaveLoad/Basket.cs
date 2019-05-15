@@ -30,28 +30,45 @@ namespace SaveLoad
         {
             foreach (Product t in Groceries)
             {
-                Console.WriteLine(t);
+                Console.WriteLine($"Id: {t.Id}, name: {t.Name}, price: {t.Price}, category: {t.Category}");
             }
             return "";
         }
 
-        public void SaveToText() //Works with privet Product properties
+        public bool SaveToText() //Works with privet Product properties// Saves only the values
         {
-
-            using (StreamWriter file = new StreamWriter(filenametxt))
+            try
             {
-                foreach (Product t in Groceries)
+                using (StreamWriter file = new StreamWriter(filenametxt))
                 {
-                    file.WriteLine(t);
+                    foreach (Product t in Groceries)
+                    {
+                        file.WriteLine(t);
+                    }
                 }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
             }
         }
 
-        public void SaveToJson() //Doesn't work with private Product properties
+        public bool SaveToJson() //Doesn't work with private Product properties
         {
-            string json = JsonConvert.SerializeObject(Groceries.ToArray());
-            //write string to file
-            File.WriteAllText(filenamejson, json);
+            try
+            {
+                string json = JsonConvert.SerializeObject(Groceries.ToArray());
+                //write string to file
+                File.WriteAllText(filenamejson, json);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
         }
 
         public bool SaveToExcel()
@@ -82,15 +99,17 @@ namespace SaveLoad
                 }
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return false;
             }
         }
 
-        
-        public bool LoadFromText() //Doesn't work at this stage
+
+        public bool LoadFromText()
         {
+            Groceries.Clear();
             try
             {
                 //Read each line from the file and create a Product instance
@@ -101,23 +120,23 @@ namespace SaveLoad
                         var item = line.Split(',');
                         if (item.Length == 4)
                         {
-                            Console.WriteLine($"{item[0]}, {item[1]}, {item[2]}, {item[3]}");
-                            Product a = new Product(int.Parse(item[0]), item[1], double.Parse(item[2]), item[3]);
-                            Console.WriteLine(a);
-                            //Groceries.Add(new Product(int.Parse(item[0]), item[1], double.Parse(item[2]), item[3]));
+                            Groceries.Add(new Product(int.Parse(item[0]), item[1], double.Parse(item[2]), item[3]));
+
                         }
                     }
                 }
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return false;
             }
         }
 
         public void LoadFromJson()
         {
+            Groceries.Clear();
             string data = File.ReadAllText(filenamejson);
             var tempGroceries = JsonConvert.DeserializeObject<List<Product>>(data);
             foreach (Product t in tempGroceries)
@@ -129,6 +148,7 @@ namespace SaveLoad
 
         public bool LoadFromExcel()
         {
+            Groceries.Clear();
             try
             {
                 XSSFWorkbook hssfwb;
@@ -138,10 +158,11 @@ namespace SaveLoad
                     hssfwb = new XSSFWorkbook(file);
                 }
                 ISheet sheet = hssfwb.GetSheet("Mysheet");
+
                 // first row not included, it contains headers
                 for (int row = 1; row <= sheet.LastRowNum; row++)
                 {
-                    if (sheet.GetRow(row) != null) 
+                    if (sheet.GetRow(row) != null)
                     {
 
                         int id = int.Parse(sheet.GetRow(row).GetCell(0).ToString());
@@ -156,8 +177,9 @@ namespace SaveLoad
                 }
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return false;
             }
         }

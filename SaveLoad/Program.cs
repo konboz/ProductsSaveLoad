@@ -12,9 +12,9 @@ namespace SaveLoad
             basket.SaveToText();
             basket.SaveToJson();
             basket.SaveToExcel();
-            //basket.LoadFromText();
-            basket.LoadFromJson();
-            basket.LoadFromExcel();
+            basket.LoadFromText();
+            //basket.LoadFromJson();
+            //basket.LoadFromExcel();
             Console.WriteLine(basket);
             Console.ReadLine();
         }

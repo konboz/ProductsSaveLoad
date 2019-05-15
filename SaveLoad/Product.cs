@@ -21,7 +21,7 @@ namespace SaveLoad
 
         public override string ToString()
         {
-            return $"Id: {Id}, Name: {Name}, Price: {Price}, Category: {Category}";
+            return $"{Id},{Name},{Price},{Category}";
         }
     }
 }
