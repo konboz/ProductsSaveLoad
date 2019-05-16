@@ -5,10 +5,11 @@ namespace SaveLoad
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public double Price { get; set; }
-        public string Category { get; set; }
+        public decimal Price { get; set; }
+        public ProductCategory Category { get; set; }
+        
 
-        public Product(int id, string name, double price, string category)
+        public Product(int id, string name, decimal price, ProductCategory category)
         {
             Id = id;
             Name = name;
